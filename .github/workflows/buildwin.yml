@@ -1,44 +1,49 @@
-name: "Release Build"
+name: "Build mCoder Windows"
 
 on:
   push:
     branches:
-      - main # Se déclenche quand tu push sur la branche main
+      - main
 
 jobs:
-  publish:
-    permissions:
-      contents: write
+  build:
     runs-on: windows-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22 # Fix pour l'erreur tree-sitter / C++20
+          node-version: 22 # Stable pour tes dépendances natives
           cache: 'npm'
 
-      - name: Install Rust stable
-        uses: dtolnay/rust-toolchain@stable
+      - name: Install Python
+        uses: actions/setup-python@v5
         with:
-          targets: x86_64-pc-windows-msvc
+          python-version: '3.11'
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
           npm install
-          # Si tu as des erreurs de build natives, décommente la ligne suivante :
-          # npm install --global node-gyp
+          # VS Code a besoin de gulp en global souvent pour ses scripts de build
+          npm install -g gulp
 
-      - name: Build and Release
-        uses: tauri-apps/tauri-action@v0.5
+      - name: Compile mCoder
+        run: |
+          npm run gulp compile
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_OPTIONS: "--max-old-space-size=8192"
+
+      - name: Build Windows Executable
+        run: |
+          # C'est la commande de VS Code pour packager l'archive Windows
+          npm run gulp vscode-win32-x64-archive 
+        env:
+          NODE_OPTIONS: "--max-old-space-size=8192"
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
         with:
-          tagName: v__VERSION__ # Utilise la version du package.json
-          releaseName: "mCoder v__VERSION__"
-          releaseBody: "Build automatique de mCoder via GitHub Actions."
-          releaseDraft: true
-          prerelease: false
+          name: mCoder-Windows
+          path: ../vscode-rebuild-x64 # Le dossier de sortie par défaut de VS Code
