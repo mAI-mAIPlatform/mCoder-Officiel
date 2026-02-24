@@ -3,39 +3,42 @@ name: "Release Build"
 on:
   push:
     branches:
-      - main # Se lance quand tu push sur main
+      - main # Se déclenche quand tu push sur la branche main
 
 jobs:
   publish:
     permissions:
       contents: write
     runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - name: setup node
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: 22 # Fix pour l'erreur tree-sitter / C++20
+          cache: 'npm'
 
-      - name: install Rust stable
+      - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
 
-      - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-22.04'
+      - name: Install dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
+          npm install
+          # Si tu as des erreurs de build natives, décommente la ligne suivante :
+          # npm install --global node-gyp
 
-      - name: install frontend dependencies
-        run: npm install # Ou yarn install / pnpm install
-
-      - uses: tauri-apps/tauri-action@v0.5
+      - name: Build and Release
+        uses: tauri-apps/tauri-action@v0.5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tagName: app-v__VERSION__ # Ça utilise le numéro de version de ton package.json
-          releaseName: "App v__VERSION__"
-          releaseBody: "Build automatique via GitHub Actions."
+          tagName: v__VERSION__ # Utilise la version du package.json
+          releaseName: "mCoder v__VERSION__"
+          releaseBody: "Build automatique de mCoder via GitHub Actions."
           releaseDraft: true
           prerelease: false
