@@ -1,7 +1,7 @@
 name: "Build mCoder Windows"
 
 on:
-  push:
+  pull_request:
     branches:
       - main
   workflow_dispatch:
@@ -45,7 +45,6 @@ jobs:
       - name: Prepare Artifacts for Upload
         shell: bash
         run: |
-          # On déplace le build du dossier parent vers le dossier courant pour contourner la restriction ".."
           if [ -d "../VSCode-win32-x64" ]; then
             mv ../VSCode-win32-x64 ./mCoder-build
           elif [ -d "../vscode-rebuild-x64" ]; then
@@ -59,5 +58,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mCoder-Windows-x64
-          path: ./mCoder-build # Maintenant c'est un chemin local, GH est content !
+          path: ./mCoder-build
           if-no-files-found: error
