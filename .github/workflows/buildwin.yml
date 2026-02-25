@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-  workflow_dispatch: # Permet de lancer le build manuellement pour tester
+  workflow_dispatch:
 
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22 # Stable pour compiler tree-sitter et les modules natifs
+          node-version: 22
           cache: 'npm'
 
       - name: Setup Python
@@ -36,19 +36,28 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=8192"
 
-      - name: Build Windows Executable (Production)
+      - name: Build Windows Executable
         run: |
-          # Utilisation de la tâche minifiée suggérée par tes logs
           npm run gulp vscode-win32-x64-min
         env:
           NODE_OPTIONS: "--max-old-space-size=8192"
+
+      - name: Prepare Artifacts for Upload
+        shell: bash
+        run: |
+          # On déplace le build du dossier parent vers le dossier courant pour contourner la restriction ".."
+          if [ -d "../VSCode-win32-x64" ]; then
+            mv ../VSCode-win32-x64 ./mCoder-build
+          elif [ -d "../vscode-rebuild-x64" ]; then
+            mv ../vscode-rebuild-x64 ./mCoder-build
+          else
+            echo "Erreur: Dossier de build introuvable !"
+            exit 1
+          fi
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: mCoder-Windows-x64
-          # VS Code build généralement dans le dossier parent du repo
-          path: |
-            ../VSCode-win32-x64
-            ../vscode-rebuild-x64
+          path: ./mCoder-build # Maintenant c'est un chemin local, GH est content !
           if-no-files-found: error
