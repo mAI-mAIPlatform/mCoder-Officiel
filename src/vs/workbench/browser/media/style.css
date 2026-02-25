@@ -220,6 +220,41 @@ body {
 	pointer-events: none;
 }
 
+
+
+/* mCoder Liquid Glass (iOS 26 inspired) */
+
+.monaco-workbench {
+	--mcoder-glass-bg: color-mix(in srgb, var(--vscode-editor-background) 74%, transparent);
+	--mcoder-glass-border: color-mix(in srgb, var(--vscode-contrastBorder, var(--vscode-focusBorder)) 40%, transparent);
+	--mcoder-glass-shadow: 0 10px 32px color-mix(in srgb, #000 24%, transparent);
+	--mcoder-glass-highlight: inset 0 1px 0 color-mix(in srgb, #fff 18%, transparent);
+}
+
+.monaco-workbench .part,
+.monaco-workbench .editor-group-container,
+.monaco-workbench .quick-input-widget,
+.monaco-workbench .notifications-center,
+.monaco-workbench .notification-toast {
+	background: var(--mcoder-glass-bg);
+	backdrop-filter: blur(14px) saturate(135%);
+	-webkit-backdrop-filter: blur(14px) saturate(135%);
+	border: 1px solid var(--mcoder-glass-border);
+	box-shadow: var(--mcoder-glass-highlight), var(--mcoder-glass-shadow);
+	transition: background-color 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+}
+
+.monaco-workbench .quick-input-widget,
+.monaco-workbench .notification-toast {
+	border-radius: 16px;
+}
+
+.monaco-workbench .titlebar,
+.monaco-workbench .statusbar {
+	backdrop-filter: blur(18px) saturate(150%);
+	-webkit-backdrop-filter: blur(18px) saturate(150%);
+}
+
 /* Keyboard Focus Indication Styles */
 
 .monaco-workbench [tabindex="0"]:focus,
@@ -320,4 +355,20 @@ body {
 .monaco-workbench .monaco-action-bar:not(.vertical) .action-item .action-label:hover:not(.disabled) {
 	outline: 1px dashed var(--vscode-toolbar-hoverOutline);
 	outline-offset: -1px;
+}
+
+
+.monaco-workbench .monaco-action-bar .action-item .action-label:hover,
+.monaco-workbench .monaco-toolbar .action-label:hover {
+	filter: drop-shadow(0 4px 10px color-mix(in srgb, var(--vscode-focusBorder) 45%, transparent));
+	transform: translateY(-1px);
+	transition: transform 120ms ease, filter 180ms ease;
+}
+
+.monaco-workbench .tabs-container .tab {
+	transition: transform 120ms ease, background-color 150ms ease;
+}
+
+.monaco-workbench .tabs-container .tab.active {
+	transform: translateY(-1px);
 }

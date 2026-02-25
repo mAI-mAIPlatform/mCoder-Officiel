@@ -5,7 +5,7 @@
 
 import * as nls from '../../nls.js';
 
-export const LANGUAGE_DEFAULT = 'en';
+export const LANGUAGE_DEFAULT = 'fr';
 
 let _isWindows = false;
 let _isMacintosh = false;
@@ -162,7 +162,7 @@ export const userAgent = _userAgent;
 /**
  * The language used for the user interface. The format of
  * the string is all lower case (e.g. zh-tw for Traditional
- * Chinese or de for German)
+ * Chinese or fr for French)
  */
 export const language = _language;
 
@@ -174,16 +174,16 @@ export namespace Language {
 
 	export function isDefaultVariant(): boolean {
 		if (language.length === 2) {
-			return language === 'en';
+			return language === 'fr';
 		} else if (language.length >= 3) {
-			return language[0] === 'e' && language[1] === 'n' && language[2] === '-';
+			return language[0] === 'f' && language[1] === 'r' && language[2] === '-';
 		} else {
 			return false;
 		}
 	}
 
 	export function isDefault(): boolean {
-		return language === 'en';
+		return language === 'fr';
 	}
 }
 
