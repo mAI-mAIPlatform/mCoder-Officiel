@@ -4,21 +4,23 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch: # Permet de lancer le build manuellement pour tester
 
 jobs:
   build:
     runs-on: windows-latest
+    
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22 # Stable pour tes dépendances natives
+          node-version: 22 # Stable pour compiler tree-sitter et les modules natifs
           cache: 'npm'
 
-      - name: Install Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -26,7 +28,6 @@ jobs:
       - name: Install Dependencies
         run: |
           npm install
-          # VS Code a besoin de gulp en global souvent pour ses scripts de build
           npm install -g gulp
 
       - name: Compile mCoder
@@ -35,15 +36,19 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=8192"
 
-      - name: Build Windows Executable
+      - name: Build Windows Executable (Production)
         run: |
-          # C'est la commande de VS Code pour packager l'archive Windows
-          npm run gulp vscode-win32-x64-archive 
+          # Utilisation de la tâche minifiée suggérée par tes logs
+          npm run gulp vscode-win32-x64-min
         env:
           NODE_OPTIONS: "--max-old-space-size=8192"
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: mCoder-Windows
-          path: ../vscode-rebuild-x64 # Le dossier de sortie par défaut de VS Code
+          name: mCoder-Windows-x64
+          # VS Code build généralement dans le dossier parent du repo
+          path: |
+            ../VSCode-win32-x64
+            ../vscode-rebuild-x64
+          if-no-files-found: error
