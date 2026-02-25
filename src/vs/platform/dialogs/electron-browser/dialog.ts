@@ -36,9 +36,11 @@ export function createNativeAboutDialogDetails(productService: IProductService, 
 	const details = getDetails(true);
 	const detailsToCopy = getDetails(false);
 
+	const mCoderBranding = "\n\nmCoder is a central part of the mServices Digital Hub.";
+
 	return {
 		title: productService.nameLong,
-		details: details,
-		detailsToCopy: detailsToCopy
+		details: details + mCoderBranding,
+		detailsToCopy: detailsToCopy + mCoderBranding
 	};
 }

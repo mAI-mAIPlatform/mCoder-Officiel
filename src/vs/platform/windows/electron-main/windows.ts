@@ -135,7 +135,9 @@ export function defaultBrowserWindowOptions(accessor: ServicesAccessor, windowSt
 	const windowSettings = configurationService.getValue<IWindowSettings | undefined>('window');
 
 	const options: electron.BrowserWindowConstructorOptions & { experimentalDarkMode: boolean; accentColor?: boolean | string } = {
-		backgroundColor: themeMainService.getBackgroundColor(),
+		backgroundColor: '#00000000', // Liquid Glass: transparent background
+		transparent: true, // Liquid Glass: enable transparency
+		frame: false, // Liquid Glass: custom frame for transparency
 		minWidth: WindowMinimumSize.WIDTH,
 		minHeight: WindowMinimumSize.HEIGHT,
 		title: productService.nameLong,

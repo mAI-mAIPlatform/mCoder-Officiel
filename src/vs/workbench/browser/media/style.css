@@ -53,6 +53,38 @@ body {
 	z-index: 1;
 	overflow: hidden;
 	color: var(--vscode-foreground);
+	background-color: rgba(15, 15, 15, 0.6) !important;
+	backdrop-filter: blur(25px) saturate(160%);
+}
+
+/* Liquid Glass: Workbench Parts */
+.monaco-workbench .part.sidebar,
+.monaco-workbench .part.activitybar,
+.monaco-workbench .part.panel,
+.monaco-workbench .part.auxiliarybar {
+	background-color: rgba(15, 15, 15, 0.6) !important;
+	backdrop-filter: blur(25px) saturate(160%);
+	border-right: 1px solid rgba(255, 255, 255, 0.05); /* Subtle separator */
+}
+
+/* Liquid Glass: Floating elements */
+.monaco-menu-container,
+.monaco-list,
+.monaco-editor-hover,
+.suggest-widget {
+	border-radius: 12px !important;
+	background-color: rgba(15, 15, 15, 0.6) !important;
+	border: 1px solid rgba(255, 255, 255, 0.1) !important;
+	backdrop-filter: blur(25px) saturate(160%);
+}
+
+/* Liquid Glass: Accent Gradients */
+.monaco-progress-container .progress-bit {
+	background: linear-gradient(90deg, #00C6FF 0%, #0072FF 100%) !important; /* Liquid Blue */
+}
+
+.monaco-list-row.focused {
+	background: linear-gradient(90deg, rgba(0, 198, 255, 0.2) 0%, rgba(0, 114, 255, 0.2) 100%) !important;
 }
 
 .monaco-workbench.web {
